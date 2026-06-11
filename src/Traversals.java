@@ -67,7 +67,23 @@ public class Traversals {
    * @return a list of node values in a top-to-bottom order, or an empty list if the tree is null
    */
   public static <T> List<T> collectLevelOrderValues(TreeNode<T> node) {
-    return null;
+    List<T> values = new ArrayList<>();
+    if (node == null) {
+      return values;
+    }
+    Queue<TreeNode<T>> queue = new LinkedList<>();
+    queue.add(node);
+    while (!queue.isEmpty()) {
+      TreeNode<T> current = queue.poll();
+      values.add(current.value);
+      if (current.left != null) {
+        queue.add(current.left);
+      }
+      if (current.right != null) {
+        queue.add(current.right);
+      }
+    }
+    return values;
   }
 
   /**
@@ -77,8 +93,22 @@ public class Traversals {
    * @param node the node of the tree
    * @return the number of unique values in the tree, or 0 if the tree is null
    */
-  public static int countDistinctValues(TreeNode<Integer> node) {
-    return 0;
+  public static int countDistinctValues(TreeNode<Integer> node){
+    if (node == null) {
+      return 0;
+    }
+    Set<Integer> values = new HashSet<>();
+    collectValues(node, values);
+    return values.size();
+  }
+
+  private static void collectValues(TreeNode<Integer> node, Set<Integer> values){
+    if (node == null){
+      return;
+    }
+    values.add(node.value);
+    collectValues(node.left, values);
+    collectValues(node.right, values);
   }
 
   /**
@@ -90,7 +120,20 @@ public class Traversals {
    * @return true if there exists a strictly increasing root-to-leaf path, false otherwise
    */
   public static boolean hasStrictlyIncreasingPath(TreeNode<Integer> node) {
-    return false;
+    if (node == null) {
+      return false;
+    }
+    if (node.left == null && node.right == null) 
+    {
+      return true;
+    }
+    boolean leftValid = node.left != null 
+          && node.left.value > node.value
+          && hasStrictlyIncreasingPath(node.left);
+    boolean rightValid = node.right != null 
+          && node.right.value > node.value
+        && hasStrictlyIncreasingPath(node.right);
+    return leftValid || rightValid;
   }
 
   // OPTIONAL CHALLENGE
